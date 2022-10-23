@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { PieChart } from 'react-minimal-pie-chart';
+import { useQuery } from 'react-query';
 import { useParams } from "react-router-dom";
 import {
     Bar, BarChart, CartesianGrid, Legend, Line, LineChart, Tooltip, XAxis,
     YAxis
 } from "recharts";
+import { getChartDataByVideoId } from '../api';
 import Modal from '../components/Modal/Modal';
 import Portal from '../components/Portal';
 import './Details.css';
@@ -94,7 +96,7 @@ const bardata = [
 
 
 
-const Chart = () => {
+const Chart = ({ chartData }) => {
 
 
     return (
@@ -102,20 +104,20 @@ const Chart = () => {
         <LineChart
             width={500}
             height={300}
-            data={data}
+            data={chartData}
             margin={{
                 top: 5, right: 30, left: 20, bottom: 5,
             }}
         >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
+            <XAxis dataKey="review_time" />
             <YAxis />
             <Tooltip />
             <Legend />
-            <Line type="monotone" dataKey="positive" stroke="#3a7bd5" activeDot={{ r: 8 }} /> //stroke : 선의 색상, activeDot : 그래프에 마우스를 올릴 시 원의 스타일 설정
-            <Line type="monotone" dataKey="negative" stroke="#ef473a" />
-            <Line type="monotone" dataKey="question" stroke="#7F00FF" />
-            <Line type="monotone" dataKey="neutrality" stroke="#d9a7c7" />
+            <Line type="monotone" dataKey="positive_chat_count" stroke="#3a7bd5" activeDot={{ r: 8 }} /> //stroke : 선의 색상, activeDot : 그래프에 마우스를 올릴 시 원의 스타일 설정
+            <Line type="monotone" dataKey="negative_chat_count" stroke="#ef473a" />
+            <Line type="monotone" dataKey="question_chat_count" stroke="#7F00FF" />
+            <Line type="monotone" dataKey="neturality_chat_count" stroke="#d9a7c7" />
 
 
         </LineChart>
@@ -145,9 +147,13 @@ const Barchartt = () => {
 function Details() {
 
 
-    // videoId가져오기
+    // videoId가져오
     const { videoId } = useParams();
+    console.log(videoId)
 
+    const { data: chartData } = useQuery(['review', 'emotion_chart_data', videoId, 'list'], () => getChartDataByVideoId(videoId))
+
+    console.log(chartData)
     // 통계 모달 상태 관리
     const [isOpenedStatisticsModal, setOpenedStatisticsModal] = useState(false)
 
@@ -241,6 +247,17 @@ function Details() {
         );
     };
 
+   
+
+    const [chartViewData, setchartViewData ] = useState([])
+
+    const handleChartData=()=>{
+        setchartViewData(chartData)
+
+    }
+   
+
+
     return (
         <div className="detail-container">
             <div className="statistics-container">
@@ -249,7 +266,8 @@ function Details() {
                 <div className='chatlog'>
                     <p>다시보기 채팅</p>
                 </div>
-                <Chart />
+                <button onClick={handleChartData}>차트조회</button>
+                <Chart chartData={chartViewData} />
 
                 <div className="detail">
                     <button type="button" onClick={() => setOpenedStatisticsModal(true)}>notice</button>
