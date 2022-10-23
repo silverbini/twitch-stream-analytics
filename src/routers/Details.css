@@ -99,6 +99,7 @@
     flex-direction: column;
     align-items: center;
     width: 50%;
+
 }
 
 .radio-statistics-body {
@@ -106,10 +107,18 @@
     padding: 0 10%;
     box-sizing: border-box;
     display: grid;
-    grid-template-columns: 30% 70%
+    grid-template-columns: 30% 50%
 }
 
 label {
     display: flex;
     align-items: center;
+}
+
+.chatlog {
+
+
+    border: 3px solid black;
+    height: 150px;
+    width: 80%;
 }

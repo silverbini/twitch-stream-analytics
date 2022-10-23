@@ -1,23 +1,13 @@
-import { useEffect, useState } from 'react'
-import { findRenderedComponentWithType } from "react-dom/test-utils";
-import React, { PureComponent } from 'react';
+import React, { useEffect, useState } from 'react';
+import { PieChart } from 'react-minimal-pie-chart';
 import { useParams } from "react-router-dom";
 import {
-    LineChart,
-    Line,
-    XAxis,
-    YAxis,
-    CartesianGrid,
-    Tooltip,
-    Legend,
-    ResponsiveContainer,
-    BarChart,
-    Bar
+    Bar, BarChart, CartesianGrid, Legend, Line, LineChart, Tooltip, XAxis,
+    YAxis
 } from "recharts";
-import { render } from "@testing-library/react";
-import './Details.css'
-import Portal from '../components/Portal'
-import Modal from '../components/Modal/Modal'
+import Modal from '../components/Modal/Modal';
+import Portal from '../components/Portal';
+import './Details.css';
 
 
 
@@ -96,6 +86,10 @@ const bardata = [
         "number of viewers": 3214
     },
 ];
+
+
+
+
 
 
 
@@ -199,8 +193,18 @@ function Details() {
         const firstSelectionPercent = firstFeelingAmount / total * 100
         const secondSelectionPercent = secondFeelingAmount / total * 100
 
-        return `${firstSelectionPercent.toFixed(2)}% : ${secondSelectionPercent.toFixed(2)}%`
+        console.log("sdfdg");
+
+        return firstSelectionPercent.toFixed(0)
+
     }
+
+
+
+
+
+
+
 
     useEffect(() => {
         const handleEscapeModal = (e) => {
@@ -217,16 +221,38 @@ function Details() {
         return () => window.removeEventListener('keydown', handleEscapeModal)
     }, [isOpenedHighLightModal, isOpenedStatisticsModal])
 
+    const Pie = () => {
+        const piedata =
+            [{ title: `${selectedFeelings[0]}`, value: getPercentageRadio(), color: '#f5af19', },
+            { title: `${selectedFeelings[1]}`, value: 100 - getPercentageRadio(), color: '#f12711' }];
+        return (
+            <PieChart
+                data={piedata}
+                label={({ dataEntry }) => dataEntry.value}
+                totalValue={100}
+                radius={40}
+                lineWidth={100}
+                labelStyle={(index) => ({
+                    fontSize: '10px',
+                    fontFamily: 'sans-serif',
+                })}
+
+            />
+        );
+    };
+
     return (
         <div className="detail-container">
             <div className="statistics-container">
                 <h1>{"<시간대별 채팅 감정 분석>"}</h1>
+
+                <div className='chatlog'>
+                    <p>다시보기 채팅</p>
+                </div>
                 <Chart />
-                <h5 className="notice">notice: x축의 시간은 방송 시간이 아닌 경과된 시간을 기준으로 함  ex) 04:00 -&gt; 시작한지 4시간 경과<br />
-                    y축의 수치는 1시간 단위의 누적된 데이터를 말함 ex) 04:00 -&gt; 03:00 ~ 04:00 동안의 데이터
-                </h5>
+
                 <div className="detail">
-                    <button type="button" onClick={() => setOpenedStatisticsModal(true)}>방송 정보 보기</button>
+                    <button type="button" onClick={() => setOpenedStatisticsModal(true)}>notice</button>
                 </div>
             </div>
             <div className="ratio-statistics-container">
@@ -261,20 +287,23 @@ function Details() {
                             <label>
                                 <input type="checkbox" name="test" value="total" checked={selectedFeelings.includes('total')} onChange={handleSelectedFeeling} />total
                             </label>
+
                         </div>
+
                     </div>
+
                     <div className='result'>
-                        <div>{selectedFeelings[0] && `선택된 감정 1: ${selectedFeelings[0]}`}</div>
-                        <div>{selectedFeelings[1] && `선택된 감정 2: ${selectedFeelings[1]}`}</div>
+
+
                         {selectedTime
                             ? selectedFeelings.length >= 2
                                 ? <div>
-                                    <div>{getValue(selectedFeelings[0])}</div>
-                                    <div>{getValue(selectedFeelings[1])}</div>
-                                    <div>{getPercentageRadio()}</div>
+                                    <div>{selectedFeelings[0] && `${selectedFeelings[0]} : ${getValue(selectedFeelings[0])} `}</div>
+                                    <div>{selectedFeelings[1] && `${selectedFeelings[1]} :${getValue(selectedFeelings[1])}`}</div>
                                 </div>
                                 : <div>감정을 모두 선택해주세요.</div>
                             : <div>시간을 선택해주세요.</div>}
+                        <div className='pie'><Pie /></div>
                     </div>
                 </div>
             </div>
@@ -286,13 +315,10 @@ function Details() {
                                 <div className='statics-modal-header'>
                                     <div>
                                         <div className='close-button' onClick={() => setOpenedStatisticsModal(false)}>X</div>
-                                        <div className='broinfo'>{"<방송 정보>"}</div> <br />
+                                        <div className='broinfo'>{"<notice>"}</div> <br />
                                         <div className='inter'>
-                                            <p>비디오 아이디 :   </p><br />
-                                            <p>스트리머이름:   </p><br />
-                                            <p>방송제목:       </p><br />
-                                            <p>방송날짜:     </p><br />
-                                            <p>조회수:     </p><br />
+                                            <p>notice: x축의 시간은 방송 시간이 아닌 경과된 시간을 기준으로 함  ex) 04:00 -&gt; 시작한지 4시간 경과<br />
+                                                y축의 수치는 1시간 단위의 누적된 데이터를 말함 ex) 04:00 -&gt; 03:00 ~ 04:00 동안의 데이터</p>
                                         </div>
                                     </div>
                                 </div>
