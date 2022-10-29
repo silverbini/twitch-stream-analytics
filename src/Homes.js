@@ -4,6 +4,7 @@ import Modal from './components/Modal/Modal'
 import axios from 'axios'
 import './App.css'
 import detail from "./routers/Details";
+import Livechat from "./routers/Livechat";
 import {
     BrowserRouter as Router,
     Routes,
@@ -23,6 +24,8 @@ function Homes() {
     const [videoId, setVideoId] = useState(() => sessionStorage.getItem('videoId') ?? '')
     const [isLoading, setLoading] = useState(false)
     const [isError, setError] = useState(false)
+
+    const [userId, setuserId] = useState(() => sessionStorage.getItem('userId') ?? '')
 
 
     // 페이지 이동을 가능하게 해주는 함수 -> useNavigate의 return 값으로 전달받아서 사용
@@ -96,13 +99,14 @@ function Homes() {
     return (
         <div className='App'>
             <h1 className="title">Welcome</h1>
-            <input className="id-input" placeholder="video Id를 입력해주세요" value={videoId} onChange={(e) => setVideoId(e.target.value)} onKeyDown={(e) => {
+            <h3>다시보기 영상</h3>
+            <div>  <input className="id-input" placeholder="video Id를 입력해주세요" value={videoId} onChange={(e) => setVideoId(e.target.value)} onKeyDown={(e) => {
                 if (e.key === 'Enter') {
                     getVideoData()
                 }
             }} />
-            <button className="data-button" onClick={getVideoData}>입력</button>
-            <h4> 채팅로그</h4>
+                <button className="data-button" onClick={getVideoData}>입력</button> </div>
+            <h4> 방송정보</h4>
 
 
             {/* 자바스크립트 코드를 쓸 수 있다. */}
@@ -149,6 +153,21 @@ function Homes() {
             }
 
 
+            <div>
+                <h3 className="sil">실시간 영상</h3>
+                <input className="userid-input" placeholder="user Id를 입력해주세요" value={userId} onChange={(e) => setuserId(e.target.value)} />
+
+                <button className="data-button" onClick={() => {
+                    if (!userId) {
+                        alert('userID 를 입력해주세요.')
+                        return
+                    }
+                    sessionStorage.setItem('userId', userId)
+                    navigate(`/Livechat/${userId}`)
+                }} >입력</button>
+
+
+            </div>
         </div>
 
 

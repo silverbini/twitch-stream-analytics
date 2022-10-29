@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { PieChart } from 'react-minimal-pie-chart';
-import { useQuery } from 'react-query';
+import { useQuery, useMutation } from 'react-query';
 import { useParams } from "react-router-dom";
 import {
     Bar, BarChart, CartesianGrid, Legend, Line, LineChart, Tooltip, XAxis,
     YAxis
 } from "recharts";
-import { getChartDataByVideoId } from '../api';
+import { getChartDataByVideoId, makeChartDataByVideoId, getReviewChatDataByVideoId } from '../api';
 import Modal from '../components/Modal/Modal';
 import Portal from '../components/Portal';
 import './Details.css';
@@ -151,9 +151,26 @@ function Details() {
     const { videoId } = useParams();
     console.log(videoId)
 
-    const { data: chartData } = useQuery(['review', 'emotion_chart_data', videoId, 'list'], () => getChartDataByVideoId(videoId))
+    const sequentialSetting = async (videoId) => {
+        await getReviewChatDataByVideoId(videoId)
+        getChartDataByVideoId(videoId)
+
+    }
+
+    const { data: reviewChat, refetch } = useQuery(['review', 'review_chat_data', videoId, 'list'], () => getReviewChatDataByVideoId(videoId), {
+        enabled: false,
+    })
+
+    const { data: chartData } = useQuery(['review', 'emotion_chart_data', videoId, 'list'], () => getChartDataByVideoId(videoId), {
+        onSuccess: async () => {
+            await refetch()
+        }
+    })
+
 
     console.log(chartData)
+    console.log(reviewChat)
+
     // 통계 모달 상태 관리
     const [isOpenedStatisticsModal, setOpenedStatisticsModal] = useState(false)
 
@@ -185,7 +202,7 @@ function Details() {
 
 
     function getValue(feeling) {
-        const selectedData = data.find(item => item.name === selectedTime)
+        const selectedData = chartData.find(item => item.review_time === selectedTime)
         return selectedData[feeling]
     }
 
@@ -199,11 +216,12 @@ function Details() {
         const firstSelectionPercent = firstFeelingAmount / total * 100
         const secondSelectionPercent = secondFeelingAmount / total * 100
 
-        console.log("sdfdg");
+        console.log(firstSelectionPercent.toFixed(0));
 
         return firstSelectionPercent.toFixed(0)
 
     }
+
 
 
 
@@ -247,24 +265,52 @@ function Details() {
         );
     };
 
-   
 
-    const [chartViewData, setchartViewData ] = useState([])
 
-    const handleChartData=()=>{
+    const [chartViewData, setchartViewData] = useState([])
+
+    const handleChartData = () => {
+
         setchartViewData(chartData)
+    }
+
+
+
+
+
+
+    const [reviewChatting, setreviewChatting] = useState()
+    const reviewchat = () => {
+        setreviewChatting(reviewChat)
 
     }
-   
+
+
+
+
 
 
     return (
         <div className="detail-container">
             <div className="statistics-container">
                 <h1>{"<시간대별 채팅 감정 분석>"}</h1>
-
+                <p>다시보기 채팅</p>
+                <div>시간:닉네임&gt; 채팅&gt; 감정</div>
                 <div className='chatlog'>
-                    <p>다시보기 채팅</p>
+                    <div>
+
+
+                        {reviewChat &&
+                            reviewChat.map((it) => (
+                                <div>
+
+                                    <div>{it.chat_time_min}.{it.chat_time_sec} : {it.chat_nickname}  &gt; {it.chat_comment} &gt; {it.chat_emotion}</div>
+
+                                </div>
+                            ))
+
+                        }
+                    </div>
                 </div>
                 <button onClick={handleChartData}>차트조회</button>
                 <Chart chartData={chartViewData} />
@@ -279,9 +325,10 @@ function Details() {
                     <div className="filter">
                         <div className='option'>
                             <select name="choice" onChange={handleTime}>
-                                {data.map(item => {
-                                    return <option value={item.name}>{item.name}</option>
+                                {chartData && chartData.map(item => {
+                                    return <option value={item.review_time}>{item.review_time}</option>
                                 })}
+
                             </select>
                         </div>
                         <div className="checkboxes">
@@ -289,21 +336,21 @@ function Details() {
                                 <input
                                     type="checkbox"
                                     name="test"
-                                    value="positive"
-                                    checked={selectedFeelings.includes('positive')}
+                                    value="positive_chat_count"
+                                    checked={selectedFeelings.includes('positive_chat_count')}
                                     onChange={handleSelectedFeeling} />positive
                             </label>
                             <label>
-                                <input type="checkbox" name="test" value="negative" checked={selectedFeelings.includes('negative')} onChange={handleSelectedFeeling} />negative
+                                <input type="checkbox" name="test" value="negative_chat_count" checked={selectedFeelings.includes('negative_chat_count')} onChange={handleSelectedFeeling} />negative
                             </label>
                             <label>
-                                <input type="checkbox" name="test" value="question" checked={selectedFeelings.includes('question')} onChange={handleSelectedFeeling} />question
+                                <input type="checkbox" name="test" value="question_chat_count" checked={selectedFeelings.includes('question_chat_count')} onChange={handleSelectedFeeling} />question
                             </label>
                             <label>
-                                <input type="checkbox" name="test" value="neutrality" checked={selectedFeelings.includes('neutrality')} onChange={handleSelectedFeeling} />neutrality
+                                <input type="checkbox" name="test" value="neturality_chat_count" checked={selectedFeelings.includes('neturality_chat_count')} onChange={handleSelectedFeeling} />neutrality
                             </label>
                             <label>
-                                <input type="checkbox" name="test" value="total" checked={selectedFeelings.includes('total')} onChange={handleSelectedFeeling} />total
+                                <input type="checkbox" name="test" value="total_chat_count" checked={selectedFeelings.includes('total_chat_count')} onChange={handleSelectedFeeling} />total
                             </label>
 
                         </div>
@@ -322,7 +369,23 @@ function Details() {
                                 : <div>감정을 모두 선택해주세요.</div>
                             : <div>시간을 선택해주세요.</div>}
                         <div className='pie'><Pie /></div>
+
+
                     </div>
+                </div>
+                <div>부정 채팅</div>
+                <div className='negativeBox'>
+                    {reviewChat && reviewChat.map(data => {
+                        if (data.chat_emotion === "부정")
+                            return <div>{data.chat_time_min}.{data.chat_time_sec} &gt;{data.chat_nickname} &gt; {data.chat_comment}</div>;
+                    })}
+                </div>
+                <div>질문 채팅</div>
+                <div className='negativeBox'>
+                    {reviewChat && reviewChat.map(data => {
+                        if (data.chat_emotion === "질문")
+                            return <div>{data.chat_time_min}.{data.chat_time_sec} &gt;{data.chat_nickname} &gt; {data.chat_comment}</div>;
+                    })}
                 </div>
             </div>
             {

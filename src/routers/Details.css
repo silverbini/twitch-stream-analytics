@@ -121,4 +121,12 @@ label {
     border: 3px solid black;
     height: 150px;
     width: 80%;
+    overflow: auto;
+}
+
+.negativeBox {
+    border: 3px solid black;
+    height: 100px;
+    width: 80%;
+    overflow: auto;
 }
