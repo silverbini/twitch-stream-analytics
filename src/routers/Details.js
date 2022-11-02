@@ -171,10 +171,10 @@ function Details() {
     console.log(chartData)
     console.log(reviewChat)
 
-    // 통계 모달 상태 관리
+
     const [isOpenedStatisticsModal, setOpenedStatisticsModal] = useState(false)
 
-    // 하이라이트 모달
+
     const [isOpenedHighLightModal, setOpenedHighLightModal] = useState(false)
 
     const [selectedTime, setSelectedTime] = useState(null)

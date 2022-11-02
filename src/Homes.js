@@ -14,10 +14,7 @@ import PropTypes from "prop-types";
 import { Link, useNavigate } from "react-router-dom";
 
 
-const 비동기함수 = async () => { }
-async function 비동기함수1() {
 
-}
 
 function Homes() {
     const [videoData, setVideoData] = useState(null)
@@ -28,9 +25,6 @@ function Homes() {
     const [userId, setuserId] = useState(() => sessionStorage.getItem('userId') ?? '')
 
 
-    // 페이지 이동을 가능하게 해주는 함수 -> useNavigate의 return 값으로 전달받아서 사용
-
-    // navigate(url: string) -> 페이지 이동 === <Link to={url} />와 같음
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -55,13 +49,10 @@ function Homes() {
 
 
 
-    // API를 호출하면 -> 데이터를 불러오는 시간이 있음 -> 로딩 중인지 몰랐음
+
 
     const getVideoData = async () => {
-        // try 내부에 있는 코드에서 에러가 났을 때
-        // await -> 기다리다
-        // Promise -> 3가지 상태 1.대기중 2. 성공 3.실패
-        // await 비동기함수 -> 변수에 담을거야
+
         setLoading(true)
         try {
             const { data: accessData } = await axios.post(
@@ -73,26 +64,23 @@ function Homes() {
                     'Client-Id': '01gir5cvc2bgckgag0wl0iowz923ll',
                 },
             })
-            setVideoData(response.data.data[0]); // 화면에 반영될 때까지
-            // catch안에있는 함수가 동작한다.
+            setVideoData(response.data.data[0]);
+
             setError(false)
         } catch (err) {
             setError(true)
         } finally {
-            // 성공을 하든, 에러가 뜨든 무조건 실행하는 코드 블럭
-            // 에러가 뜨든, 성공을 하든 로딩은 완료가 되어야하니깐
+
             setLoading(false)
             sessionStorage.removeItem('videoId')
 
-            // 가짜 이동 상태
+
             window.history.pushState('', '', null)
         }
     }
 
 
-    // state값이 변경될 때 rerendering이 된다 
-    // props가 바뀌었을 때 -> 나중
-    // 부모컴포넌트가 리렌더링됐을 때 -> 나중 
+
 
 
 
@@ -109,7 +97,7 @@ function Homes() {
             <h4> 방송정보</h4>
 
 
-            {/* 자바스크립트 코드를 쓸 수 있다. */}
+
             {isLoading
 
                 ? <h1 className='fbox'>로딩 중입니다...</h1>
@@ -131,7 +119,7 @@ function Homes() {
                             <div className="statics-button-box">
                                 <button className='statics' onClick={() => {
 
-                                    // 세션 스토리지에(탭을 닫을때 까지 유지되는 스토리지(서버 <-> 클라) 저장
+
                                     if (!videoId) {
                                         alert('비디오 id를 입력해주세요.')
                                         return

@@ -13,13 +13,12 @@ function Livechat() {
     })
 
 
-    // 전체는 all
-    // 나머지는 타입별정
+
 
 
     const showAll = (event) => {
         event.preventDefault()
-        // 
+
         setChatType('all')
     }
 
