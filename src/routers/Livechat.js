@@ -46,10 +46,10 @@ function Livechat() {
 
     return (
         <div>
-            <h1>LIVE CHAT</h1>
-            <h3>{userId}님의 실시간 채팅 정보입니다.</h3>
+            <h1 className='live-chat'> LIVE CHAT</h1>
+            <h3 className='live-chat'>{userId} 님의 실시간 채팅 분류입니다.</h3>
             <div >
-                <ul class="navbar-nav mr-auto">
+                <ul className='ul'>
                     <li className='Menu'>
                         <a onClick={showAll}>전체</a></li>
                     <li className='Menu'>
@@ -62,33 +62,37 @@ function Livechat() {
                         <a onClick={showQuestion}>질문</a></li>
                 </ul>
 
-                {LivechatData?.map(({ chat_nickname, chat_comment, chat_emotion }) => {
-                    if (chatType === 'all') {
-                        return <div>{chat_nickname}:{chat_comment} -&gt;{chat_emotion}</div>
-                    }
-                    if (chatType === 'emotion') {
-                        return <div>{chat_emotion}</div>
-                    }
-                    if (chatType === 'positive_or_none') {
-                        if (chat_emotion === '긍정' || chat_emotion === '없음') {
-                            return <div>{chat_nickname}:{chat_comment} -&gt;{chat_emotion}</div>
+                <div >
+                    <div className='content'>
+                        {LivechatData?.map(({ chat_nickname, chat_comment, chat_emotion }) => {
+                            if (chatType === 'all') {
+                                return <div><div className='emotion'>{chat_nickname}</div>: {chat_comment} -&gt;<div className='name'>{chat_emotion}</div></div>
+                            }
+                            if (chatType === 'emotion') {
+                                return <div className='only'>{chat_emotion}</div>
+                            }
+                            if (chatType === 'positive_or_none') {
+                                if (chat_emotion === '긍정' || chat_emotion === '없음') {
+                                    return <div><div className='emotion'>{chat_nickname}</div>:  {chat_comment} </div>
+                                }
+                                return null
+                            }
+                            if (chatType === 'negative') {
+                                if (chat_emotion === '부정') {
+                                    return <div><div className='emotion'>{chat_nickname}</div>:{chat_comment}</div>
+                                }
+                                return null
+                            }
+                            if (chatType === 'question') {
+                                if (chat_emotion === '질문') {
+                                    return <div><div className='emotion'>{chat_nickname}</div>:{chat_comment}</div>
+                                }
+                                return null
+                            }
                         }
-                        return null
-                    }
-                    if (chatType === 'negative') {
-                        if (chat_emotion === '부정') {
-                            return <div>{chat_nickname}:{chat_comment} -&gt;{chat_emotion}</div>
-                        }
-                        return null
-                    }
-                    if (chatType === 'question') {
-                        if (chat_emotion === '질문') {
-                            return <div>{chat_nickname}:{chat_comment} -&gt;{chat_emotion}</div>
-                        }
-                        return null
-                    }
-                }
-                )}
+
+                        )}</div>
+                </div>
             </div>
         </div>
     )

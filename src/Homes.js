@@ -86,30 +86,32 @@ function Homes() {
 
     return (
         <div className='App'>
-            <h1 className="title">Welcome</h1>
-            <h3>다시보기 영상</h3>
+            <h1 className="title">
+                Twitch Korea Streaming Manager
+            </h1>
+
             <div>  <input className="id-input" placeholder="video Id를 입력해주세요" value={videoId} onChange={(e) => setVideoId(e.target.value)} onKeyDown={(e) => {
                 if (e.key === 'Enter') {
                     getVideoData()
                 }
             }} />
                 <button className="data-button" onClick={getVideoData}>입력</button> </div>
-            <h4> 방송정보</h4>
+
 
 
 
             {isLoading
 
-                ? <h1 className='fbox'>로딩 중입니다...</h1>
+                ? <h1 className='fbox'>Loading..</h1>
                 : isError
                     ?
-                    <h4 className='fbox' style={{ color: 'red' }}>에러가 발생했습니다. </h4>
+                    <h4 className='fbox' style={{ color: '#b20a2c', fontSize: '25px' }}> Error</h4>
                     : <div >
                         <div className='box'>
                             {videoData && (
                                 <>
-                                    <div>스트리머이름: {videoData?.user_name}</div>
-                                    <div>방송 제목: {videoData?.title}</div>
+                                    <div>스트리머 이름: {videoData?.user_name}</div>
+                                    <div>방속제목: {videoData?.title}</div>
                                     <div>조회수: {videoData?.view_count}</div>
                                     <div>생성일: {videoData?.created_at}</div>
                                 </>
@@ -117,7 +119,7 @@ function Homes() {
                         </div>
                         {videoData && (
                             <div className="statics-button-box">
-                                <button className='statics' onClick={() => {
+                                <button className='data-button' onClick={() => {
 
 
                                     if (!videoId) {
@@ -127,7 +129,7 @@ function Homes() {
                                     sessionStorage.setItem('videoId', videoId)
                                     navigate(`/detail/${videoId}`)
                                 }}>통계</button>
-                                <button type="button" className='statics' onClick={() => {
+                                <button type="button" className='data-button' onClick={() => {
                                     if (!videoId) {
                                         alert('비디오 id를 입력해주세요.')
                                         return
@@ -142,7 +144,7 @@ function Homes() {
 
 
             <div>
-                <h3 className="sil">실시간 영상</h3>
+                <h1 className="sil">Live Chat</h1>
                 <input className="userid-input" placeholder="user Id를 입력해주세요" value={userId} onChange={(e) => setuserId(e.target.value)} />
 
                 <button className="data-button" onClick={() => {

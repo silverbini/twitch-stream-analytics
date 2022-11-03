@@ -2,6 +2,10 @@
     padding-left: 3%;
 }
 
+.h1 {
+    color: #0575E6;
+}
+
 .title1 {
     padding-left: 30%;
 }
@@ -17,6 +21,14 @@
 
 .detail {
     padding-left: 3%;
+    box-sizing: 'border-box';
+    border: none;
+    background-color: #4286f4;
+    border-radius: 9px;
+    color: white;
+    margin-top: 40px;
+    height: 30px;
+    width: 70px;
 
 }
 
@@ -118,15 +130,56 @@ label {
 .chatlog {
 
 
-    border: 3px solid black;
+    border: 3px solid #0575E6;
     height: 150px;
     width: 80%;
     overflow: auto;
 }
 
 .negativeBox {
-    border: 3px solid black;
+    border: 3px solid #0575E6;
     height: 100px;
     width: 80%;
     overflow: auto;
+    margin-top: 10px;
+}
+
+.chart {
+    box-sizing: 'border-box';
+    border: none;
+    background-color: #4286f4;
+    border-radius: 9px;
+    color: white;
+    margin-top: 40px;
+    height: 30px;
+    width: 70px;
+
+
+
+
+}
+
+.graph {
+    margin-top: 40px;
+}
+
+.checkbox {
+    color: #4286f4;
+}
+
+.pie {
+    border-radius: 9px;
+    box-sizing: 'border-box';
+    border: none;
+
+}
+
+.select {
+    color: #e74c3c;
+}
+
+.negative {
+    margin-top: 10px;
+    color: #4286f4;
+    font-weight: bold;
 }

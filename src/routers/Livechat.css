@@ -1,6 +1,48 @@
 .Menu {
-    align-items: initial;
+    text-align: center;
     display: inline;
-    padding: 15px;
-    font-size: medium;
+    padding: 19px;
+
+    font-size: large;
+    font-weight: bold;
+    color: #1D2671
+}
+
+.live-chat {
+    padding-left: 20px;
+    color: #0575E6;
+    text-align: center;
+}
+
+.content {
+    font-size: 20px;
+    padding-left: 20px;
+    line-height: 40px;
+    border: 3px solid #4286f4;
+
+
+    margin-left: 25%;
+    margin-right: 25%;
+
+}
+
+.ul {
+    padding-left: 15px;
+    text-align: center;
+}
+
+.emotion {
+    display: inline;
+    font-weight: bold;
+
+}
+
+.name {
+    display: inline;
+    text-decoration: underline;
+
+}
+
+.only {
+    font-weight: bold;
 }

@@ -293,9 +293,9 @@ function Details() {
     return (
         <div className="detail-container">
             <div className="statistics-container">
-                <h1>{"<시간대별 채팅 감정 분석>"}</h1>
-                <p>다시보기 채팅</p>
-                <div>시간:닉네임&gt; 채팅&gt; 감정</div>
+                <h1 className='h1'>{"<시간대별 채팅 감정 분석>"}</h1>
+                <p className='h1'>전체 채팅</p>
+                <div className='h1'>시간: 닉네임&gt; 채팅&gt; 감정</div>
                 <div className='chatlog'>
                     <div>
 
@@ -312,19 +312,20 @@ function Details() {
                         }
                     </div>
                 </div>
-                <button onClick={handleChartData}>차트조회</button>
-                <Chart chartData={chartViewData} />
 
-                <div className="detail">
-                    <button type="button" onClick={() => setOpenedStatisticsModal(true)}>notice</button>
+                <button className='chart' onClick={handleChartData}>차트조회</button>
+                <div className='graph'><Chart chartData={chartViewData} /></div>
+
+                <div >
+                    <button className="detail" type="button" onClick={() => setOpenedStatisticsModal(true)}>notice</button>
                 </div>
             </div>
             <div className="ratio-statistics-container">
-                <h1>-감정비율 알아보기</h1>
+                <h1 className='h1'>{"<감정비율 알아보기>"}</h1>
                 <div className="radio-statistics-body">
                     <div className="filter">
                         <div className='option'>
-                            <select name="choice" onChange={handleTime}>
+                            <select className='h1' name="choice" onChange={handleTime}>
                                 {chartData && chartData.map(item => {
                                     return <option value={item.review_time}>{item.review_time}</option>
                                 })}
@@ -332,7 +333,7 @@ function Details() {
                             </select>
                         </div>
                         <div className="checkboxes">
-                            <label>
+                            <label className='checkbox'>
                                 <input
                                     type="checkbox"
                                     name="test"
@@ -340,16 +341,16 @@ function Details() {
                                     checked={selectedFeelings.includes('positive_chat_count')}
                                     onChange={handleSelectedFeeling} />positive
                             </label>
-                            <label>
+                            <label className='checkbox'>
                                 <input type="checkbox" name="test" value="negative_chat_count" checked={selectedFeelings.includes('negative_chat_count')} onChange={handleSelectedFeeling} />negative
                             </label>
-                            <label>
+                            <label className='checkbox'>
                                 <input type="checkbox" name="test" value="question_chat_count" checked={selectedFeelings.includes('question_chat_count')} onChange={handleSelectedFeeling} />question
                             </label>
-                            <label>
+                            <label className='checkbox'>
                                 <input type="checkbox" name="test" value="neturality_chat_count" checked={selectedFeelings.includes('neturality_chat_count')} onChange={handleSelectedFeeling} />neutrality
                             </label>
-                            <label>
+                            <label className='checkbox'>
                                 <input type="checkbox" name="test" value="total_chat_count" checked={selectedFeelings.includes('total_chat_count')} onChange={handleSelectedFeeling} />total
                             </label>
 
@@ -363,24 +364,24 @@ function Details() {
                         {selectedTime
                             ? selectedFeelings.length >= 2
                                 ? <div>
-                                    <div>{selectedFeelings[0] && `${selectedFeelings[0]} : ${getValue(selectedFeelings[0])} `}</div>
-                                    <div>{selectedFeelings[1] && `${selectedFeelings[1]} :${getValue(selectedFeelings[1])}`}</div>
+                                    <div className='checkbox'>{selectedFeelings[0] && `${selectedFeelings[0]} : ${getValue(selectedFeelings[0])} `}</div>
+                                    <div className='checkbox'>{selectedFeelings[1] && `${selectedFeelings[1]} :${getValue(selectedFeelings[1])}`}</div>
                                 </div>
-                                : <div>감정을 모두 선택해주세요.</div>
-                            : <div>시간을 선택해주세요.</div>}
+                                : <div className='select'>감정을 모두 선택해주세요.</div>
+                            : <div className='select'>시간을 선택해주세요.</div>}
                         <div className='pie'><Pie /></div>
 
 
                     </div>
                 </div>
-                <div>부정 채팅</div>
+                <div className='negative'>부정 채팅</div>
                 <div className='negativeBox'>
                     {reviewChat && reviewChat.map(data => {
                         if (data.chat_emotion === "부정")
                             return <div>{data.chat_time_min}.{data.chat_time_sec} &gt;{data.chat_nickname} &gt; {data.chat_comment}</div>;
                     })}
                 </div>
-                <div>질문 채팅</div>
+                <div className='negative'>질문 채팅</div>
                 <div className='negativeBox'>
                     {reviewChat && reviewChat.map(data => {
                         if (data.chat_emotion === "질문")
